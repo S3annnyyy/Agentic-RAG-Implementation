@@ -1,0 +1,30 @@
+@font-face {
+  font-family: "Charlie-sans";
+  src: url("./assets/fonts/charlie-sans.ttf");
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  overflow-x:hidden;
+  background: #f1f5f9;
+  font-family: "Charlie-sans"
+}
+
+/* custom scroll-bar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #808080;
+  border-radius: 1.625rem;
+  border: 4px solid #f1f5f9;
+  background-clip: padding-box
+}
