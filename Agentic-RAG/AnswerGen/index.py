@@ -19,4 +19,4 @@ def generateResponse(retriever: rtrType.VectorStoreRetriever, llm: llmType.ChatO
     rag_chain = ANSGEN_PROMPT | llm | StrOutputParser()
     docs = retriever.invoke(question)
     response = rag_chain.invoke({"context": docs, "question": question})
-    return response
+    return response, docs 
