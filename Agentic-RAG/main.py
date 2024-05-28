@@ -8,6 +8,7 @@ from RetrievalGrader import retrievalGrader
 from AnswerGen import generateResponse
 from WebSearch import tavilySearchTool
 from HallucinationGrader import hallucinationGrader
+from AnswerGrader import answerGrader
 
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
@@ -23,11 +24,14 @@ def main():
     # output = retrievalGrader(retriever=retriever, llm=GRADER_LLM, question="What is sentiment analysis of Secondary school?")
     # print(output)
 
-    output, docs = generateResponse(retriever=retriever, llm=GEN_LLM, question="What is sentiment analysis of Secondary school?")
+    output, docs = generateResponse(retriever=retriever, llm=GEN_LLM, question="How to buy iphone 5")
     print(output)
 
-    output = hallucinationGrader(output, docs)
-    print(output)
+    output2 = hallucinationGrader(output, docs)
+    print(output2)
+
+    output3 = answerGrader(output, docs)
+    print(output3)
 
 if __name__ == "__main__":
     main()
