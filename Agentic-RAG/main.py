@@ -12,12 +12,14 @@ from AnswerGen import generateResponse, decideToGenerate
 from WebSearch import tavilyWebSearchTool
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(filename='state.log', level=logging.INFO)    
+logging.basicConfig(filename='state.log', level=logging.INFO)   
+
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
-URLS = ["https://towardsdatascience.com/text-classification-sentiment-analysis-on-r-sgexams-4ea341134fba"]
 FIRECRAWL_API_KEY = os.environ.get("FIRECRAWL_API_KEY")
 TAVILLY_API_KEY = os.environ.get("TAVILY_API_KEY")
+
+URLS = ["https://towardsdatascience.com/text-classification-sentiment-analysis-on-r-sgexams-4ea341134fba"]
 
 class LangGraphState(TypedDict):
     """
