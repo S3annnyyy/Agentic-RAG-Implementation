@@ -1,1 +1,1 @@
-from .index import tavilySearchTool
+from .index import tavilyWebSearchTool
