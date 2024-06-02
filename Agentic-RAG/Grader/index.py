@@ -43,29 +43,66 @@ HALLUCINATION_PROMPT = PromptTemplate(
     input_variables=["generation", "documents"],
 )
 
-def hallucinationGrader(answerGenerated, docs):
+# CONDITIONAL EDGE
+def hallucinationGrader(state: dict):
     """
     """
-    hGrader = HALLUCINATION_PROMPT | LLM | JsonOutputParser()
-    outcome = hGrader.invoke({"documents": docs, "generation": answerGenerated}) 
-    return outcome
+    question = state["question"]
+    documents = state["documents"]
+    generation = state["generation"]
+    hallucinationGrader = HALLUCINATION_PROMPT | LLM | JsonOutputParser()
+    answerGrader = GRADING_PROMPT | LLM | JsonOutputParser()
 
-def retrievalGrader(retriever: rtrType.VectorStoreRetriever, question: str):
+    hallucination_score = hallucinationGrader.invoke({"documents": documents, "generation": generation})
+    hallucination_grade = hallucination_score["score"]
+
+    if hallucination_grade.lower() == "yes":
+        print("---DECISION: GENERATION IS GROUNDED IN DOCUMENTS") 
+        print("---GRADE GENERATION vs QUESTION---")
+        answer_score = answerGrader.invoke({"question": question, "generation": generation})
+        answer_grade = answer_score["score"]
+
+        if answer_grade.lower() == "yes":
+            print("---DECISION: GENERATION ANSWERS QUESTION, NOT HALLUCINATION")
+            return "useful"
+        else:
+            print("---DECISION: GENERATION IS A HALLUCINATION")
+            return "not useful"
+    else:
+        print("---DECISION: GENERATION IS NOT GROUNDED IN DOCUMENTS")
+        return "not supported"
+
+
+def retrievalGrader(state: dict):
     """
+    This function determins if any retrieved documents are relevant to the question.
+    If not relevant => Set flag to run web search
+
+    Args:
+        state: The current graph state
+    
+    Returns:
+        state: Filtered to contain only relevant documents + updated web search state 
     """
-    grader = RETRIEVAL_PROMPT | LLM | JsonOutputParser()
+    # Init retrieval grader
+    retrieval_grader = RETRIEVAL_PROMPT | LLM | JsonOutputParser()
 
-    docs = retriever.invoke(question)
+    print("---CHECK DOCUMENT RELEVANCE TO THE QUESTION---")
+    question = state["question"]
+    documents = state["documents"]
 
-    doc_txt = docs[1].page_content
+    filtered_docs = []
+    web_search = "No"
+    for doc in documents:
+        score = retrieval_grader.invoke({"question": question, "document": doc.page_content})
+        grade = score["score"]
+        # Add relevant documents to filtered_docs
+        if grade.lower() == "yes":
+            print("---GRADE: DOCUMENT RELEVANT")
+            filtered_docs.append(doc)
+        else:
+            print("GRADE: DOCUMENT NOT RELEVANT")
+            web_search = "Yes"
+            continue
+    return {"documents": filtered_docs, "question": question, "web_search": web_search}
 
-    output_grade = grader.invoke({"question": question, "document": doc_txt})
-
-    return output_grade
-
-def answerGrader(answerGenerated, docs):
-    """
-    """
-    aGrader = GRADING_PROMPT | LLM | JsonOutputParser()
-    outcome = aGrader.invoke({"question": docs, "generation": answerGenerated}) 
-    return outcome

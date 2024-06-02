@@ -42,6 +42,4 @@ def createVectorDB(urls: list, chunkSize: int, chunkOverlap: int, apiKey: str):
     )
 
     retriever = vector_store.as_retriever()
-
     return retriever
-
