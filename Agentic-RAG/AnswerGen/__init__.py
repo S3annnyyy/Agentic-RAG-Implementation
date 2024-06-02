@@ -1,1 +1,1 @@
-from .index import generateResponse
+from .index import generateResponse, decideToGenerate
