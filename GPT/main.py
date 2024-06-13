@@ -30,76 +30,15 @@ def jsonResponse(rescode, **kwargs):
 @app.route("/v1/gpt/generate", methods=['POST'])
 def generate_response():
 
-    data = request.json
-    dishName = data.get("dish")
-
-    print(dishName)
-    # V1: Showcase basic api calls first before
-    # completion = client.chat.completions.create(
-    # model="gpt-3.5-turbo",
-    # messages=[
-    #     {"role": "system", "content": "You are a helpful recipe assistant. Only use the functions you have been provided with"},   
-    #     {"role": "system", "content": "You are a helpful assistant designed to output JSON."},             
-    #     {"role": "user", "content": "Come up with the recipe for chicken rice with at least 10 steps"},        
-    # ],
-    # response_format={ "type": "json_object" },    
-    # )
-
-    # response = completion.choices[0].message.content    
+    # 1. Initialize schema
+    #TODO
+    # 2. Retrieve frontend request from body
+    #TODO
+    # 3. Initialize openai chat completions instance with gpt-3.5-turbo model
+    # 4. Show what happens if exceed token limit, unable to close json then give error
+    #TODO
     
-    # return jsonResponse(200, data={"response": json.loads(response)})
-
-    
-    # V2: Showcase how to generate consistent responses
-    schema = { 
-        "type": "object",
-            "properties": {
-                "dish": {
-                    "type": "string",
-                    "description": "Descriptive title of the dish"
-                },
-                "ingredients": {
-                    "type": "array",
-                    "items": {"type": "string"}
-                },
-                "instructions": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "step": {
-                                "type": "integer",
-                                "description": "Step number, numbering from 1"
-                            },
-                            "description": {
-                                "type": "string",
-                                "description": "Steps to prepare the recipe."
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    
-    chat_completion = client.chat.completions.create(
-        model="gpt-3.5-turbo-1106",
-        response_format={ "type": "json_object" },
-        messages=[
-            {"role": "system", "content": f"Provide output in valid json format. The data schema should be like this {json.dumps(schema)}"},
-            {"role": "system", "content": "You are a helpful recipe assistant. Only use the information you have been provided with"},                            
-            {"role": "user", "content": f"Come up with the recipe for {dishName} with 3 steps"},       
-        ],            
-        temperature=0.1,
-    )
-
-    data = chat_completion.choices[0].message.content
-
-    # V3: Showcase how to generate consistent responses + show what happens if exceed token limit, unable to close json then give error
-    # Finish reason for token exceeding is length else it should be stop
-    # finish_reason = chat_completion.choices[0].finish_reason
-    # print(finish_reason)
-        
-    return jsonResponse(200, response=json.loads(data))
+    return jsonResponse(200, response="Not implemented yet")
 
 
 if __name__ == "__main__":   
