@@ -1,6 +1,6 @@
 # HEAP-AI-Workshop
 
-# 1st half of workshop [OpenAI API Integration to Frontend] [WIP]
+# 1st half of workshop [OpenAI API Integration to Frontend]
 
 ## Frontend directory
 Make sure you have nodejs `v20.10.0` or higher and npm `10.2.3` or higher installed. Install dependencies with:
