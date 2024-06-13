@@ -1,27 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { waveform } from 'ldrs';
 waveform.register();
+
+type RecipeSchema = {
+  dish: string;
+  ingredients: string[];
+  instructions: { step: number; description: string }[];
+};
 
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
 };
 
 const GPTResponse: React.FC = () => {
+  
   const query = useQuery();
   const dishName = query.get('dishName');
   const navigate = useNavigate();
-  
+  const apiCalled = useRef<boolean>(false)  
   const [isLoading, setIsLoading] = useState(true);
-  const [recipe, setRecipe] = useState<{ dish: string, ingredients: string[], instructions: { step: number, description: string }[] } | null>(null);
+  const [recipe, setRecipe] = useState<RecipeSchema | null>(null);
 
   useEffect(() => {
     if (!dishName) {
       navigate('/');
-    } else {
+    } else if (apiCalled.current === false) {
       fetchRecipe(dishName);
+      apiCalled.current = true;
     }
-  }, []);
+  }, [dishName, navigate]);
 
   const fetchRecipe = async (dishName: string) => {
     try {
@@ -35,12 +43,16 @@ const GPTResponse: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         console.log(data)
-        setRecipe(data.data.response);
+        setRecipe(data.response);
       } else {
         console.error('Failed to fetch the recipe');
+        alert("Failed to call API, please try again later")
+        navigate('/');
       }
     } catch (error) {
       console.error('Error:', error);
+      alert("Failed to call API, please try again later")
+      navigate('/');
     } finally {
       setIsLoading(false);
     }
@@ -54,8 +66,8 @@ const GPTResponse: React.FC = () => {
         </div>
       ) : (
         recipe && (
-          <div>
-            <h1 className="text-3xl font-bold mb-4">Recipe for {recipe.dish}</h1>
+          <div className='bg-white p-6 rounded-lg shadow-lg'>
+            <h1 className="text-3xl font-bold mb-4 text-center">Recipe for {recipe.dish}</h1>
             <h2 className="text-2xl font-semibold mb-2">Ingredients:</h2>
             <ul className="mb-4">
               {recipe.ingredients.map((ingredient, index) => (

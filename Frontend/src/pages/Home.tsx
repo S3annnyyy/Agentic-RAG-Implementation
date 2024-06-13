@@ -16,7 +16,7 @@ const Home: React.FC = () => {
         alert("Input cannot be empty, please try again~😊")
         setDishName("")
       } else {
-        navigate(`/response?dishName=${dishName}`);
+        navigate(`/response?dishName=${encodeURIComponent(dishName)}`);
       }
     }
 
