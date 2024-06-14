@@ -45,16 +45,17 @@ HALLUCINATION_PROMPT = PromptTemplate(
 
 # CONDITIONAL EDGE
 def hallucinationGrader(state: dict):
-    """
-    """
+    # Retrieve question, documents, generated answer from state
     question = state["question"]
     documents = state["documents"]
     generation = state["generation"]
-    hallucinationGrader = HALLUCINATION_PROMPT | LLM | JsonOutputParser()
-    answerGrader = GRADING_PROMPT | LLM | JsonOutputParser()
 
-    hallucination_score = hallucinationGrader.invoke({"documents": documents, "generation": generation})
-    hallucination_grade = hallucination_score["score"]
+    # Initialize both hallucination and answer grader
+    #TODO
+
+    # Invoke both documents and generated answer to get delulu score  
+    #TODO
+    raise NotImplementedError
 
     if hallucination_grade.lower() == "yes":
         print("---DECISION: GENERATION IS GROUNDED IN DOCUMENTS") 
@@ -84,25 +85,19 @@ def retrievalGrader(state: dict):
     Returns:
         state: Filtered to contain only relevant documents + updated web search state 
     """
-    # Init retrieval grader
+    # Initialize retrieval grader
     retrieval_grader = RETRIEVAL_PROMPT | LLM | JsonOutputParser()
 
     print("---CHECK DOCUMENT RELEVANCE TO THE QUESTION---")
+    # Retrieve question, documents from state
     question = state["question"]
     documents = state["documents"]
 
     filtered_docs = []
     web_search = "No"
-    for doc in documents:
-        score = retrieval_grader.invoke({"question": question, "document": doc.page_content})
-        grade = score["score"]
-        # Add relevant documents to filtered_docs
-        if grade.lower() == "yes":
-            print("---GRADE: DOCUMENT RELEVANT")
-            filtered_docs.append(doc)
-        else:
-            print("GRADE: DOCUMENT NOT RELEVANT")
-            web_search = "Yes"
-            continue
-    return {"documents": filtered_docs, "question": question, "web_search": web_search}
+    # Loop through documents and identify if any of the docs are relevant
+    # Conditions: If relevant add to filtered_docs, 
+    # TODO
+
+    raise NotImplementedError
 
