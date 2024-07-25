@@ -105,4 +105,3 @@ def retrievalGrader(state: dict):
             web_search = "Yes"
             continue
     return {"documents": filtered_docs, "question": question, "web_search": web_search}
-
