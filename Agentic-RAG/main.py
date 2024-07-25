@@ -57,14 +57,35 @@ def main():
     workflow = StateGraph(LangGraphState)
 
     # Define nodes
-    # TODO
+    workflow.add_node("websearch", tavilyWebSearchTool)
+    workflow.add_node("retrieve", retrieve)  
+    workflow.add_node("grade_documents", retrievalGrader)
+    workflow.add_node("generate", generateResponse)
 
-    # Build workflow graph
-    #TODO
+    # Build graph
+    workflow.set_entry_point("retrieve")
+    workflow.add_edge("retrieve", "grade_documents")
+    workflow.add_conditional_edges(
+        "grade_documents",
+        decideToGenerate,
+        {
+            "websearch": "websearch",
+            "generate": "generate"
+        },
+    )
+    workflow.add_edge("websearch", "generate")
+    workflow.add_conditional_edges(
+        "generate",
+        hallucinationGrader,
+        {
+            "not_supported": "generate",
+            "useful": END,
+            "not useful": "websearch",
+        }
+    )
 
     # COMPILE
     app = workflow.compile()
-    raise NotImplementedError
 
     # TESTING RAG
     inputs = {"question": "How to save LLM cost"}
