@@ -1,22 +1,6 @@
-# HEAP-AI-Workshop
+# Agentic RAG Implementation
 
-# 1st half of workshop [OpenAI API Integration to Frontend]
-
-## Frontend directory
-Make sure you have nodejs `v20.10.0` or higher and npm `10.2.3` or higher installed. Install dependencies with:
-```
-npm install
-```
-Once it's done start up a local server with:
-```
-npm run dev
-```
-To create a production build:
-```
-npm run build
-```
-
-# 2nd half of workshop [Building reliable Retrieval Augmented Generation(RAG) AI Architecture]
+## Building reliable Retrieval Augmented Generation(RAG) AI Architecture
 ![image](https://github.com/S3annnyyy/HEAP-AI-Workshop/assets/67400060/0d500237-f8a7-45dd-a04c-5390c5b1b795)
 
 Make sure you have Python `3.10.9` or higher and pip `24.0` or higher installed. Install dependencies with:
